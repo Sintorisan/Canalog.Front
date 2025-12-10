@@ -1,13 +1,6 @@
-import { createRootRoute, Outlet } from "@tanstack/react-router";
-import Navbar from "../../components/layout/Navbar";
+import { createRootRoute } from "@tanstack/react-router";
+import { RootLayout } from "./RootLayout";
 
 export const rootRoute = createRootRoute({
-    component: () => (
-        <>
-            <Navbar />
-            <main style={{ padding: "1rem" }}>
-                <Outlet />
-            </main>
-        </>
-    ),
+    component: RootLayout,
 });
