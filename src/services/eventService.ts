@@ -1,8 +1,15 @@
 import type { CalendarEvent, EventApiResponse } from "../types/event";
-import { fetchTodayEvents } from "./apiService";
+import { fetchTodayEvents, fetchWeekEvents } from "./apiService";
 
 export const getTodayEvents = async (): Promise<CalendarEvent[]> => {
-    const apiResponse: EventApiResponse[] = await fetchTodayEvents(); // <-- FIX
+    const apiResponse: EventApiResponse[] = await fetchTodayEvents();
+    return mapToEvents(apiResponse);
+};
+
+export const getEventsForDate = async (date: Date): Promise<CalendarEvent[]> => {
+    const isoDate = date.toISOString();
+    const apiResponse: EventApiResponse[] = await fetchWeekEvents(isoDate);
+
     return mapToEvents(apiResponse);
 };
 
