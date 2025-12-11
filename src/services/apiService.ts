@@ -1,9 +1,14 @@
-import type { EventApiResponse, EventRequest } from "../types/Event";
+import type {
+    DayEventApiResponse,
+    EventApiResponse,
+    EventRequest,
+    WeekEventsApiResponse,
+} from "../types/Event";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
-export const fetchTodayEvents = async (token: string): Promise<EventApiResponse[]> => {
-    const url = `${baseUrl}/events/today`;
+export const fetchDayEvents = async (token: string, date: string): Promise<DayEventApiResponse> => {
+    const url = `${baseUrl}/events/day?date=${encodeURIComponent(date)}`;
 
     const response = await fetch(url, {
         headers: {
@@ -13,14 +18,15 @@ export const fetchTodayEvents = async (token: string): Promise<EventApiResponse[
     if (!response.ok) {
         throw new Error("Failed to fetch today's events.");
     }
-    const eventsResponse: EventApiResponse[] = await response.json();
+
+    const eventsResponse: DayEventApiResponse = await response.json();
     return eventsResponse;
 };
 
 export const fetchWeekEvents = async (
     isoDate: string,
     token: string
-): Promise<EventApiResponse[]> => {
+): Promise<WeekEventsApiResponse> => {
     const url = `${baseUrl}/events/week?start=${encodeURIComponent(isoDate)}`;
 
     const response = await fetch(url, {
@@ -32,7 +38,7 @@ export const fetchWeekEvents = async (
         throw new Error("Failed to fetch week events.");
     }
 
-    const eventsResponse: EventApiResponse[] = await response.json();
+    const eventsResponse: WeekEventsApiResponse = await response.json();
     return eventsResponse;
 };
 

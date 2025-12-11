@@ -1,57 +1,42 @@
-import type { CalendarEvent, EventApiResponse, EventRequest } from "../types/Event";
+import { mapDay, mapEvent, mapRequest, mapWeek } from "../mappers/eventMapper";
+import type {
+    CalendarEvent,
+    DayEventApiResponse,
+    DayEvents,
+    EventRequest,
+    WeekEvents,
+    WeekEventsApiResponse,
+} from "../types/Event";
 import {
     createEventApi,
     deleteEventApi,
-    fetchTodayEvents,
+    fetchDayEvents,
     fetchWeekEvents,
     updateEventApi,
 } from "./apiService";
 
-const mapToEvents = (apiResponse: EventApiResponse[]): CalendarEvent[] => {
-    return apiResponse.map((response) => ({
-        id: response.id,
-        title: response.title,
-        start: new Date(response.start),
-        end: new Date(response.end),
-        color: response.color,
-    }));
+export const getDayEvents = async (date: Date, token: string): Promise<DayEvents> => {
+    const isoDate = date.toISOString().split("T")[0];
+    const apiResponse: DayEventApiResponse = await fetchDayEvents(token, isoDate);
+
+    return mapDay(apiResponse);
 };
 
-const mapToEvent = (apiResponse: EventApiResponse): CalendarEvent => {
-    return {
-        id: apiResponse.id,
-        title: apiResponse.title,
-        start: new Date(apiResponse.start),
-        end: new Date(apiResponse.end),
-        color: apiResponse.color,
-    };
-};
+export const getWeekEventsFromDate = async (date: Date, token: string): Promise<WeekEvents> => {
+    const isoDate = date.toISOString().split("T")[0];
+    const apiResponse: WeekEventsApiResponse = await fetchWeekEvents(isoDate, token);
 
-export const getTodayEvents = async (token: string): Promise<CalendarEvent[]> => {
-    const apiResponse: EventApiResponse[] = await fetchTodayEvents(token);
-    return mapToEvents(apiResponse);
-};
-
-export const getEventsForDate = async (date: Date, token: string): Promise<CalendarEvent[]> => {
-    const isoDate = date.toISOString();
-    const apiResponse: EventApiResponse[] = await fetchWeekEvents(isoDate, token);
-
-    return mapToEvents(apiResponse);
+    return mapWeek(apiResponse);
 };
 
 export const createEvent = async (request: EventRequest, token: string): Promise<CalendarEvent> => {
     const apiResponse = await createEventApi(token, request);
-    return mapToEvent(apiResponse);
+
+    return mapEvent(apiResponse);
 };
 
 export const updateEvent = async (event: CalendarEvent, token: string): Promise<void> => {
-    const request: EventRequest = {
-        id: event.id,
-        title: event.title,
-        start: event.start,
-        end: event.end,
-        color: event.color,
-    };
+    const request: EventRequest = mapRequest(event);
 
     return updateEventApi(token, request);
 };
