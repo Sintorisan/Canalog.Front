@@ -13,3 +13,10 @@ export type EventApiResponse = {
     end: string;
     eventColor: number;
 };
+
+export type EventRequest = {
+    title: string;
+    eventColor: number;
+    start: Date;
+    end: Date;
+};
