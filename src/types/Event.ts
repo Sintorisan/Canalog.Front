@@ -9,7 +9,7 @@ export type CalendarEvent = {
 export type EventApiResponse = {
     id: string;
     title: string;
-    start: Date;
-    end: Date;
+    start: string;
+    end: string;
     eventColor: number;
 };
