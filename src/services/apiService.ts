@@ -62,3 +62,23 @@ export const createEventApi = async (
 
     return eventsResponse;
 };
+
+export const updateEventApi = async (token: string, request: EventRequest): Promise<void> => {
+    const url = `${baseUrl}/events`;
+
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            title: request.title,
+            color: request.eventColor,
+            start: request.start.toISOString(),
+            end: request.end.toISOString(),
+        }),
+    });
+
+    if (!response.ok) throw new Error("Failed to update event");
+};

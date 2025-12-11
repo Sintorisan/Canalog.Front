@@ -15,8 +15,9 @@ export type EventApiResponse = {
 };
 
 export type EventRequest = {
+    id: string;
     title: string;
-    eventColor: number;
     start: Date;
     end: Date;
+    eventColor: number;
 };
