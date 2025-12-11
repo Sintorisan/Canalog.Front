@@ -1,5 +1,11 @@
 import type { CalendarEvent, EventApiResponse, EventRequest } from "../types/Event";
-import { createEventApi, fetchTodayEvents, fetchWeekEvents, updateEventApi } from "./apiService";
+import {
+    createEventApi,
+    deleteEventApi,
+    fetchTodayEvents,
+    fetchWeekEvents,
+    updateEventApi,
+} from "./apiService";
 
 const mapToEvents = (apiResponse: EventApiResponse[]): CalendarEvent[] => {
     return apiResponse.map((response) => ({
@@ -49,3 +55,6 @@ export const updateEvent = async (event: CalendarEvent, token: string): Promise<
 
     return updateEventApi(token, request);
 };
+
+export const deleteEvent = async (id: string, token: string): Promise<void> =>
+    deleteEventApi(token, id);

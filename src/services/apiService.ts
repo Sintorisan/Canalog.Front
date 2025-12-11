@@ -73,6 +73,7 @@ export const updateEventApi = async (token: string, request: EventRequest): Prom
             "Content-Type": "application/json",
         },
         body: JSON.stringify({
+            id: request.id,
             title: request.title,
             color: request.eventColor,
             start: request.start.toISOString(),
@@ -81,4 +82,15 @@ export const updateEventApi = async (token: string, request: EventRequest): Prom
     });
 
     if (!response.ok) throw new Error("Failed to update event");
+};
+
+export const deleteEventApi = async (token: string, id: string) => {
+    const url = `${baseUrl}/events/${id}`;
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) throw new Error("Failed to delete event");
 };
