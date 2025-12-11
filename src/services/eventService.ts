@@ -13,7 +13,7 @@ const mapToEvents = (apiResponse: EventApiResponse[]): CalendarEvent[] => {
         title: response.title,
         start: new Date(response.start),
         end: new Date(response.end),
-        eventColor: response.eventColor,
+        color: response.color,
     }));
 };
 
@@ -23,7 +23,7 @@ const mapToEvent = (apiResponse: EventApiResponse): CalendarEvent => {
         title: apiResponse.title,
         start: new Date(apiResponse.start),
         end: new Date(apiResponse.end),
-        eventColor: apiResponse.eventColor,
+        color: apiResponse.color,
     };
 };
 
@@ -50,7 +50,7 @@ export const updateEvent = async (event: CalendarEvent, token: string): Promise<
         title: event.title,
         start: event.start,
         end: event.end,
-        eventColor: event.eventColor,
+        color: event.color,
     };
 
     return updateEventApi(token, request);

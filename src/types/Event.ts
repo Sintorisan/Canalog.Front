@@ -3,7 +3,7 @@ export type CalendarEvent = {
     title: string;
     start: Date;
     end: Date;
-    eventColor: number;
+    color: number;
 };
 
 export type EventApiResponse = {
@@ -11,7 +11,7 @@ export type EventApiResponse = {
     title: string;
     start: string;
     end: string;
-    eventColor: number;
+    color: number;
 };
 
 export type EventRequest = {
@@ -19,5 +19,5 @@ export type EventRequest = {
     title: string;
     start: Date;
     end: Date;
-    eventColor: number;
+    color: number;
 };
