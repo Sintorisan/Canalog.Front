@@ -5,7 +5,7 @@ import type {
     DayEvents,
     WeekEventsApiResponse,
     WeekEvents,
-} from "../types/Event";
+} from "../types/EventTypes";
 
 export const mapEvent = (e: EventApiResponse): CalendarEvent => ({
     id: e.id,
@@ -28,12 +28,12 @@ export const mapWeek = (week: WeekEventsApiResponse): WeekEvents => ({
     days: week.days.map(mapDay),
 });
 
-export const mapRequest = (event: CalendarEvent) => {
+export const mapRequest = (e: CalendarEvent) => {
     return {
-        id: event.id,
-        title: event.title,
-        start: event.start,
-        end: event.end,
-        color: event.color,
+        id: e.id,
+        title: e.title,
+        start: e.start,
+        end: e.end,
+        color: e.color,
     };
 };

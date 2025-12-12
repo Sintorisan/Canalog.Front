@@ -3,7 +3,7 @@ import type {
     EventApiResponse,
     EventRequest,
     WeekEventsApiResponse,
-} from "../types/Event";
+} from "../types/EventTypes";
 
 const baseUrl = import.meta.env.VITE_BASE_URL;
 
@@ -98,4 +98,18 @@ export const deleteEventApi = async (token: string, id: string) => {
     });
 
     if (!response.ok) throw new Error("Failed to delete event");
+};
+
+export const fetchUserOptions = async (accessToken: string) => {
+    const url = `${baseUrl}/users/sync`;
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    if (!response.ok) throw new Error("Failed to load user options.");
+
+    return response.json();
 };
