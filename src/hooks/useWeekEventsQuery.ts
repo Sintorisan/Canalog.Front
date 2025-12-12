@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { getEventsForDate } from "../services/eventService";
-import { useAuthenticatedUser } from "./useAuthenticatedUser";
+import { useAuthenticatedUser } from "../hooks/useAuthenticatedUser";
+import { getWeekEventsFromDate } from "../services/eventService";
 
-export const useWeekEventsQuery = (date: Date) => {
+export const useWeekEventsQuery = (weekStart: Date) => {
     const { accessToken, isAuthenticated, isLoading } = useAuthenticatedUser();
 
     return useQuery({
-        queryKey: ["events", "week", date.toISOString()],
-        queryFn: () => getEventsForDate(date, accessToken),
+        queryKey: ["events", "week", weekStart.toISOString().split("T")[0]],
         enabled: !!accessToken && isAuthenticated && !isLoading,
+        queryFn: async () => {
+            return getWeekEventsFromDate(weekStart, accessToken!);
+        },
     });
 };

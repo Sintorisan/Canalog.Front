@@ -6,7 +6,7 @@ import type {
     EventRequest,
     WeekEvents,
     WeekEventsApiResponse,
-} from "../types/Event";
+} from "../types/EventTypes";
 import {
     createEventApi,
     deleteEventApi,

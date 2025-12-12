@@ -1,16 +1,28 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createEvent } from "../services/eventService";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
-import type { CalendarEvent } from "../types/Event";
+import { createEvent } from "../services/eventService";
+import { getMonday } from "../utils/dateUtils";
+import type { EventRequest } from "../types/EventTypes";
 
 export const useCreateEventMutation = () => {
-    const { accessToken } = useAuthenticatedUser();
     const queryClient = useQueryClient();
+    const { accessToken } = useAuthenticatedUser();
 
     return useMutation({
-        mutationFn: (request: CalendarEvent) => createEvent(request, accessToken),
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ["events"] });
+        mutationFn: async (request: EventRequest) => {
+            return await createEvent(request, accessToken!);
+        },
+        onSuccess: (createdEvent) => {
+            queryClient.invalidateQueries({
+                queryKey: ["events", "day", createdEvent.start.toISOString().split("T")[0]],
+            });
+            queryClient.invalidateQueries({
+                queryKey: [
+                    "events",
+                    "week",
+                    getMonday(createdEvent.start).toISOString().split("T")[0],
+                ],
+            });
         },
     });
 };

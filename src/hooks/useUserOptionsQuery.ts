@@ -1,13 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
-import { getTodayEvents } from "../services/eventService";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
+import { fetchUserOptions } from "../services/apiService";
 
-export const useTodayEventsQuery = () => {
+export const useUserOptionsQuery = () => {
     const { accessToken, isAuthenticated, isLoading } = useAuthenticatedUser();
 
     return useQuery({
-        queryKey: ["events", "today"],
-        queryFn: () => getTodayEvents(accessToken),
+        queryKey: ["user-options"],
         enabled: !!accessToken && isAuthenticated && !isLoading,
+        queryFn: async () => {
+            return fetchUserOptions(accessToken!);
+        },
     });
 };
