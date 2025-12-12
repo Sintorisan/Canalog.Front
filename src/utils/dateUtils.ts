@@ -11,3 +11,19 @@ export const addDays = (date: Date, days: number) => {
     d.setDate(d.getDate() + days);
     return d;
 };
+
+export const formatIsoDate = (date: Date) => {
+    const y = date.getFullYear();
+    const m = (date.getMonth() + 1).toString().padStart(2, "0");
+    const d = date.getDate().toString().padStart(2, "0");
+    return `${y}-${m}-${d}`;
+};
+
+export const parseIsoDate = (iso: string): Date | null => {
+    // Expect YYYY-MM-DD
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(iso)) return null;
+    const d = new Date(iso + "T00:00:00");
+    // Invalid date check
+    if (Number.isNaN(d.getTime())) return null;
+    return d;
+};

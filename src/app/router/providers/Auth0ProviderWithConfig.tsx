@@ -16,6 +16,11 @@ export function Auth0ProviderWithConfig({ children }: Auth0ProviderWithConfigPro
         window.history.replaceState({}, "", returnTo);
     };
 
+    // NOTE: For persistent login across refreshes, ensure your Auth0 Application
+    // is configured with Refresh Token Rotation enabled and the API allows
+    // the 'offline_access' scope. We're enabling localstorage cache and
+    // refresh tokens via the SDK here.
+
     return (
         <Auth0Provider
             domain={domain}
@@ -23,7 +28,10 @@ export function Auth0ProviderWithConfig({ children }: Auth0ProviderWithConfigPro
             authorizationParams={{
                 redirect_uri: window.location.origin,
                 audience,
+                scope: "openid profile email offline_access",
             }}
+            cacheLocation="localstorage"
+            useRefreshTokens={true}
             onRedirectCallback={onRedirectCallback}
         >
             {children}

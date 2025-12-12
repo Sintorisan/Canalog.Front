@@ -1,0 +1,63 @@
+/* DayEventsPage.module.css */
+
+.pageWrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background-size: cover;
+    background-position: center;
+    color: #fff;
+}
+
+.header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 1.25rem;
+    border-radius: 0.75rem;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.navButton {
+    background: transparent;
+    border: none;
+    color: inherit;
+    font-weight: 600;
+    font-size: 1rem;
+    width: 40px;
+    height: 36px;
+    border-radius: 8px;
+}
+
+.dateLabel {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.todayButton {
+    font-size: 0.9rem;
+    padding: 0.25rem 0.6rem;
+    border-radius: 0.6rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    cursor: pointer;
+}
+
+.clockWrap {
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(0, 0, 0, 0.35);
+    backdrop-filter: blur(4px);
+}
