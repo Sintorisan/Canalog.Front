@@ -1,36 +1,31 @@
 import { useState } from "react";
 import { useWeekEventsQuery } from "../hooks/useWeekEventsQuery";
+import { addDays, getMonday } from "../utils/dateUtils";
 
 export const WeekEventsPage = () => {
-    const [date, setDate] = useState<Date>(new Date());
-    const { data, isLoading, isError } = useWeekEventsQuery(date);
+    const [weekStart, setWeekStart] = useState(getMonday(new Date()));
 
-    const goToNextWeek = () => {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() + 7);
-        setDate(newDate);
-    };
-    const goToPrevWeek = () => {
-        const newDate = new Date(date);
-        newDate.setDate(newDate.getDate() - 7);
-        setDate(newDate);
-    };
+    const next = () => setWeekStart((prev) => addDays(prev, 7));
+    const prev = () => setWeekStart((prev) => addDays(prev, -7));
 
-    if (isError) return <h1>Error Loading</h1>;
-    if (isLoading) return <h1>Loading...</h1>;
+    const { data, isLoading } = useWeekEventsQuery(weekStart);
+
+    if (isLoading) return <p>Loading...</p>;
+
     return (
-        <>
-            {data?.map((e) => (
-                <div key={e.id}>
-                    <p>{e.id}</p>
-                    <p>{e.title}</p>
-                    <p>{String(e.start)}</p>
-                    <p>{String(e.end)}</p>
-                    <p>{String(e.color)}</p>
+        <div>
+            <button onClick={prev}>Previous</button>
+            <h2>Week of {weekStart.toDateString()}</h2>
+            <button onClick={next}>Next</button>
+
+            {data?.days.map((d, i) => (
+                <div key={i}>
+                    <h3>{String(d.date)}</h3>
+                    {d.events.map((e) => (
+                        <p key={e.id}>{e.title}</p>
+                    ))}
                 </div>
             ))}
-            <button onClick={goToNextWeek}>next</button>
-            <button onClick={goToPrevWeek}>prev</button>
-        </>
+        </div>
     );
 };
