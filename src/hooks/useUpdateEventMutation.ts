@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
 import { updateEvent } from "../services/eventService";
-import { getMonday } from "../utils/dateUtils";
+import { getMonday, formatIsoDate } from "../utils/dateUtils";
 import type { CalendarEvent } from "../types/EventTypes";
 
 export const useUpdateEventMutation = () => {
@@ -13,15 +13,12 @@ export const useUpdateEventMutation = () => {
             return await updateEvent(event, accessToken!);
         },
         onSuccess: (_, updatedEvent) => {
+            console.debug("useUpdateEventMutation.onSuccess", updatedEvent.id);
             queryClient.invalidateQueries({
-                queryKey: ["events", "day", updatedEvent.start.toISOString().split("T")[0]],
+                queryKey: ["events", "day", formatIsoDate(updatedEvent.start)],
             });
             queryClient.invalidateQueries({
-                queryKey: [
-                    "events",
-                    "week",
-                    getMonday(updatedEvent.start).toISOString().split("T")[0],
-                ],
+                queryKey: ["events", "week", formatIsoDate(getMonday(updatedEvent.start))],
             });
         },
     });

@@ -1,7 +1,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
 import { createEvent } from "../services/eventService";
-import { getMonday } from "../utils/dateUtils";
+import { getMonday, formatIsoDate } from "../utils/dateUtils";
 import type { EventRequest } from "../types/EventTypes";
 
 export const useCreateEventMutation = () => {
@@ -13,15 +13,12 @@ export const useCreateEventMutation = () => {
             return await createEvent(request, accessToken!);
         },
         onSuccess: (createdEvent) => {
+            console.debug("useCreateEventMutation.onSuccess", createdEvent.id);
             queryClient.invalidateQueries({
-                queryKey: ["events", "day", createdEvent.start.toISOString().split("T")[0]],
+                queryKey: ["events", "day", formatIsoDate(createdEvent.start)],
             });
             queryClient.invalidateQueries({
-                queryKey: [
-                    "events",
-                    "week",
-                    getMonday(createdEvent.start).toISOString().split("T")[0],
-                ],
+                queryKey: ["events", "week", formatIsoDate(getMonday(createdEvent.start))],
             });
         },
     });
