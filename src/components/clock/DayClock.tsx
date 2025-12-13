@@ -308,7 +308,9 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                         color: theme.uiColorScheme.textPrimary,
                     }}
                 >
-                    {selectedId ? selectedEvent?.title : "Click an event arc to see details"}
+                    {selectedId
+                        ? `${selectedEvent?.title} - ${selectedEvent?.start} - ${selectedEvent?.end}`
+                        : "Click an event arc to see details"}
                 </div>
             </div>
         </div>
