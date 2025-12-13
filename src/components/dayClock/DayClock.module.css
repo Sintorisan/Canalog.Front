@@ -1,0 +1,123 @@
+/* src/components/day/DayClock.module.css */
+
+.wrapper {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    background-size: cover;
+    background-position: center;
+}
+
+.glassDial {
+    position: relative;
+    width: 360px;
+    height: 360px;
+    display: inline-block;
+    border-radius: 50%;
+}
+
+.donut {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.donutOverlay {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 2;
+}
+
+.eventCard {
+    background: rgba(255, 255, 255, 0.25);
+    padding: 1rem 1.2rem;
+    border-radius: 1rem;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    min-width: 280px;
+    max-width: 320px;
+}
+
+.eventCardContent {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+}
+
+.eventInfo {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.eventTitle {
+    font-size: 1rem;
+    font-weight: 600;
+    color: inherit;
+    line-height: 1.3;
+}
+
+.eventTime {
+    font-size: 0.875rem;
+    font-weight: 400;
+    color: inherit;
+    opacity: 0.8;
+}
+
+.eventActions {
+    display: flex;
+    gap: 0.5rem;
+    flex-shrink: 0;
+}
+
+.actionButton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    color: inherit;
+    transition: all 0.2s ease;
+}
+
+.actionButton:hover {
+    background: rgba(255, 255, 255, 0.3);
+    border-color: rgba(255, 255, 255, 0.5);
+    transform: translateY(-1px);
+}
+
+.actionButton:active {
+    transform: translateY(0);
+}
+
+.actionButton svg {
+    width: 16px;
+    height: 16px;
+}
+
+.eventCardPlaceholder {
+    text-align: center;
+    font-size: 0.875rem;
+    color: inherit;
+    opacity: 0.7;
+}

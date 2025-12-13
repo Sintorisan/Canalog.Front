@@ -2,7 +2,7 @@ import { useMemo } from "react";
 import { useNavigate, useRouterState } from "@tanstack/react-router";
 import { useWeekEventsQuery } from "../hooks/useWeekEventsQuery";
 import { useTheme } from "../context/ThemeContext";
-import { DayClock } from "../components/clock/DayClock";
+import { DayClock } from "../components/dayClock/DayClock";
 import { addDays, getMonday, formatIsoDate, parseIsoDate } from "../utils/dateUtils";
 import styles from "./DayEventsPage.module.css";
 

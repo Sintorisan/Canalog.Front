@@ -27,3 +27,9 @@ export const parseIsoDate = (iso: string): Date | null => {
     if (Number.isNaN(d.getTime())) return null;
     return d;
 };
+
+export const formatTime = (date: Date): string => {
+    const hours = date.getHours();
+    const minutes = date.getMinutes();
+    return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
+};

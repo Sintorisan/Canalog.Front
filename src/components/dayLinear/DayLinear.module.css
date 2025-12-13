@@ -1,0 +1,159 @@
+/* src/components/linear/DayLinear.module.css */
+
+.wrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    padding: 12px 0;
+}
+
+.glassPanel {
+    width: min(900px, 100%);
+    padding: 16px 20px 20px;
+    border-radius: 24px;
+    background: rgba(255, 255, 255, 0.16);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+}
+
+.dayHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    margin-bottom: 10px;
+}
+
+.dayName {
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.tracksContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+/* one 12h line */
+.track {
+    position: relative;
+    height: 44px;
+    border-radius: 999px;
+    padding: 8px 10px;
+    background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.26), rgba(0, 0, 0, 0.4));
+    overflow: hidden;
+}
+
+/* main line */
+.axis {
+    position: absolute;
+    top: 50%;
+    left: 6px;
+    right: 6px;
+    height: 2px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.55);
+    transform: translateY(-50%);
+}
+
+/* hour ticks + labels */
+.hourTick {
+    position: absolute;
+    top: 0;
+    transform: translateX(-50%);
+    text-align: center;
+    font-size: 10px;
+    color: rgba(255, 255, 255, 0.85);
+}
+
+.tickLine {
+    width: 1px;
+    height: 10px;
+    margin: 0 auto 2px;
+    background: rgba(255, 255, 255, 0.7);
+    border-radius: 999px;
+}
+
+.hourLabel {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-weight: 500;
+}
+
+/* event bars */
+.eventBar {
+    position: absolute;
+    top: 50%;
+    height: 22px;
+    transform: translateY(-50%);
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding: 0 8px;
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    cursor: pointer;
+    transition: transform 120ms ease-out, box-shadow 120ms ease-out, opacity 120ms ease-out;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.eventBar:hover {
+    transform: translateY(-50%) scale(1.02);
+}
+
+.eventLabel {
+    font-size: 11px;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 0 4px rgba(0, 0, 0, 0.8);
+}
+
+/* event card, same idea as your DayClock */
+.eventCard {
+    margin-top: 8px;
+    padding: 10px 12px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, rgba(0, 0, 0, 0.55), rgba(255, 255, 255, 0.1));
+    font-size: 13px;
+}
+
+.eventTitle {
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.eventMeta {
+    opacity: 0.85;
+    margin-bottom: 8px;
+    font-size: 12px;
+}
+
+.eventButtons {
+    display: flex;
+    gap: 8px;
+}
+
+.btn {
+    border-radius: 999px;
+    border: none;
+    padding: 6px 10px;
+    font-size: 12px;
+    cursor: pointer;
+    background: rgba(255, 255, 255, 0.9);
+    color: #222;
+}
+.btn:disabled {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.weekWrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    padding: 16px 12px 32px;
+}

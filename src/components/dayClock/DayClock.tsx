@@ -10,9 +10,12 @@ import {
     getHourHandPos,
     getMinuteHandPos,
 } from "../../utils/clockMathUtils";
+import { formatTime } from "../../utils/dateUtils";
+import { useDeleteEventMutation } from "../../hooks/useDeleteEventMutation";
 
 export const DayClock = ({ day }: { day: DayEvents }) => {
     const [selectedId, setSelectedId] = useState<string | null>(null);
+    const deleteMutation = useDeleteEventMutation();
 
     const size = 360;
     const center = size / 2;
@@ -294,23 +297,81 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                 </svg>
 
                 {/* ===========================
-                        EVENT CARD (unchanged)
+                        EVENT CARD
                     =========================== */}
                 <div
-                    style={{
-                        background: "rgba(255,255,255,0.25)",
-                        padding: "0.8rem 1.3rem",
-                        borderRadius: "1rem",
-                        backdropFilter: "blur(20px)",
-                        WebkitBackdropFilter: "blur(20px)",
-                        border: "1px solid rgba(255,255,255,0.45)",
-                        boxShadow: "0 10px 25px rgba(0,0,0,0.15)",
-                        color: theme.uiColorScheme.textPrimary,
-                    }}
+                    className={styles.eventCard}
+                    style={{ color: theme.uiColorScheme.textPrimary }}
                 >
-                    {selectedId
-                        ? `${selectedEvent?.title} - ${selectedEvent?.start} - ${selectedEvent?.end}`
-                        : "Click an event arc to see details"}
+                    {selectedId && selectedEvent ? (
+                        <div className={styles.eventCardContent}>
+                            <div className={styles.eventInfo}>
+                                <div className={styles.eventTitle}>{selectedEvent.title}</div>
+                                <div className={styles.eventTime}>
+                                    {formatTime(selectedEvent.start)} -{" "}
+                                    {formatTime(selectedEvent.end)}
+                                </div>
+                            </div>
+                            <div className={styles.eventActions}>
+                                <button
+                                    className={styles.actionButton}
+                                    onClick={() => {
+                                        // TODO: Implement update functionality
+                                        console.log("Update event", selectedEvent);
+                                    }}
+                                    aria-label="Update event"
+                                >
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M11.333 2.00001C11.5084 1.82465 11.7163 1.68607 11.9441 1.59231C12.1719 1.49854 12.4151 1.45166 12.6667 1.45166C12.9182 1.45166 13.1614 1.49854 13.3892 1.59231C13.617 1.68607 13.8249 1.82465 14 2.00001C14.1754 2.17537 14.314 2.38322 14.4077 2.61101C14.5015 2.8388 14.5484 3.08201 14.5484 3.33334C14.5484 3.58468 14.5015 3.82789 14.4077 4.05568C14.314 4.28347 14.1754 4.49132 14 4.66668L5.33333 13.3333L1.33333 14.6667L2.66667 10.6667L11.333 2.00001Z"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+                                <button
+                                    className={styles.actionButton}
+                                    onClick={() => {
+                                        if (
+                                            confirm("Are you sure you want to delete this event?")
+                                        ) {
+                                            deleteMutation.mutate(selectedEvent);
+                                            setSelectedId(null);
+                                        }
+                                    }}
+                                    aria-label="Delete event"
+                                >
+                                    <svg
+                                        width="16"
+                                        height="16"
+                                        viewBox="0 0 16 16"
+                                        fill="none"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path
+                                            d="M2 4H14M12.6667 4V13.3333C12.6667 13.687 12.5262 14.0261 12.2761 14.2761C12.0261 14.5262 11.687 14.6667 11.3333 14.6667H4.66667C4.31305 14.6667 3.97391 14.5262 3.72386 14.2761C3.47381 14.0261 3.33333 13.687 3.33333 13.3333V4M5.33333 4V2.66667C5.33333 2.31305 5.47381 1.97391 5.72386 1.72386C5.97391 1.47381 6.31305 1.33334 6.66667 1.33334H9.33333C9.68696 1.33334 10.0261 1.47381 10.2761 1.72386C10.5262 1.97391 10.6667 2.31305 10.6667 2.66667V4"
+                                            stroke="currentColor"
+                                            strokeWidth="1.5"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        />
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    ) : (
+                        <div className={styles.eventCardPlaceholder}>
+                            Click an event arc to see details
+                        </div>
+                    )}
                 </div>
             </div>
         </div>
