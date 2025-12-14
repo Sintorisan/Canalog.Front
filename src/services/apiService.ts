@@ -113,3 +113,38 @@ export const fetchUserOptions = async (accessToken: string) => {
 
     return response.json();
 };
+
+export interface ThemeListItem {
+    id: string;
+    name: string;
+    background: string;
+}
+
+export const fetchThemes = async (accessToken: string): Promise<ThemeListItem[]> => {
+    const url = `${baseUrl}/options/themes`;
+
+    const response = await fetch(url, {
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+        },
+    });
+
+    if (!response.ok) throw new Error("Failed to fetch themes.");
+
+    return response.json();
+};
+
+export const updateTheme = async (accessToken: string, themeId: string): Promise<void> => {
+    const url = `${baseUrl}/options`;
+
+    const response = await fetch(url, {
+        method: "PUT",
+        headers: {
+            Authorization: `Bearer ${accessToken}`,
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ themeId }),
+    });
+
+    if (!response.ok) throw new Error("Failed to update theme.");
+};

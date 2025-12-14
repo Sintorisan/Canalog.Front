@@ -124,7 +124,7 @@ export const DayEventsPage = () => {
 
     return (
         <div className={styles.pageWrapper} style={{ backgroundImage: `url(${theme.background})` }}>
-            <div className={styles.header}>
+            <div className={styles.header} style={{ color: theme.uiColorScheme.textPrimary }}>
                 <div className={styles.controls}>
                     <button className={styles.navButton} onClick={goToPreviousDay}>
                         ◀
