@@ -1,5 +1,6 @@
 import { Outlet, useNavigate, useRouterState } from "@tanstack/react-router";
 import Navbar from "../../components/layout/Navbar";
+import { LoadingSpinner } from "../../components/layout/LoadingSpinner";
 import { useAuthenticatedUser } from "../../hooks/useAuthenticatedUser";
 import { useEffect } from "react";
 
@@ -20,7 +21,7 @@ export function RootLayout() {
         }
     }, [isLoading, isAuthenticated, location.pathname, navigate]);
 
-    if (isLoading) return <div>Loading...</div>;
+    if (isLoading) return <LoadingSpinner message="Loading..." fullPage={true} />;
 
     if (location.pathname === "/login") {
         return <Outlet />;
@@ -28,10 +29,12 @@ export function RootLayout() {
 
     return (
         <>
-            <Navbar />
-            <main style={{ padding: "1rem" }}>
+            <main
+                style={{ width: "100%", height: "100%", overflow: "hidden", position: "relative" }}
+            >
                 <Outlet />
             </main>
+            <Navbar />
         </>
     );
 }

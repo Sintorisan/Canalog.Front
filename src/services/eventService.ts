@@ -7,6 +7,7 @@ import type {
     WeekEvents,
     WeekEventsApiResponse,
 } from "../types/EventTypes";
+import { formatIsoDate } from "../utils/dateUtils";
 import {
     createEventApi,
     deleteEventApi,
@@ -16,14 +17,14 @@ import {
 } from "./apiService";
 
 export const getDayEvents = async (date: Date, token: string): Promise<DayEvents> => {
-    const isoDate = date.toISOString().split("T")[0];
+    const isoDate = formatIsoDate(date);
     const apiResponse: DayEventApiResponse = await fetchDayEvents(token, isoDate);
 
     return mapDay(apiResponse);
 };
 
 export const getWeekEventsFromDate = async (date: Date, token: string): Promise<WeekEvents> => {
-    const isoDate = date.toISOString().split("T")[0];
+    const isoDate = formatIsoDate(date);
     const apiResponse: WeekEventsApiResponse = await fetchWeekEvents(isoDate, token);
 
     return mapWeek(apiResponse);

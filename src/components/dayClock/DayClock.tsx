@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import styles from "./DayClock.module.css";
 import type { DayEvents, CalendarEvent } from "../../types/EventTypes";
 import { useTheme } from "../../context/ThemeContext";
@@ -11,11 +11,14 @@ import {
     getMinuteHandPos,
 } from "../../utils/clockMathUtils";
 import { formatTime } from "../../utils/dateUtils";
-import { useDeleteEventMutation } from "../../hooks/useDeleteEventMutation";
+import { UpdateEventModal } from "./UpdateEventModal";
+import { DeleteEventModal } from "./DeleteEventModal";
 
 export const DayClock = ({ day }: { day: DayEvents }) => {
     const [selectedId, setSelectedId] = useState<string | null>(null);
-    const deleteMutation = useDeleteEventMutation();
+    const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+    const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+    const [now, setNow] = useState(() => new Date());
 
     const size = 360;
     const center = size / 2;
@@ -26,7 +29,15 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
     const innerNumberRadius = 95; // numbers 00–11
     const innerEventRadius = 95; // events 00–11
 
-    const now = useMemo(() => new Date(), []);
+    // Update clock every second for smooth animation
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setNow(new Date());
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
     const theme = useTheme();
     const minutesToDate = (base: Date, mins: number) => {
         const d = new Date(base);
@@ -55,18 +66,13 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
     const holeRadius = 80; // keep existing mask hole size from SVG
 
     return (
-        <div className={styles.wrapper} style={{ backgroundImage: `url(${theme?.background})` }}>
+        <div>
             <div className={styles.glassDial}>
                 <div
                     className={styles.donut}
                     style={{
                         width: `${outerDiameter}px`,
                         height: `${outerDiameter}px`,
-                        background: `rgba(255,255,255,0.32)`,
-                        border: `1.25px solid ${theme.uiColorScheme.glassShadow}`,
-                        backdropFilter: "blur(22px)",
-                        WebkitBackdropFilter: "blur(22px)",
-                        boxShadow: "0px 14px 40px rgba(0,0,0,0.14)",
                         maskImage: `radial-gradient(circle at center, transparent ${holeRadius}px, black ${holeRadius}px)`,
                         WebkitMaskImage: `radial-gradient(circle at center, transparent ${holeRadius}px, black ${holeRadius}px)`,
                     }}
@@ -168,7 +174,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 fill="none"
                                 strokeDasharray={dashArray}
                                 strokeDashoffset={dashOffset}
-                                opacity={selectedId && selectedId !== e.id ? 0.3 : 1}
+                                opacity={selectedId && selectedId !== e.id ? 0.5 : 1}
                                 style={{ cursor: "pointer" }}
                                 onClick={() => setSelectedId(e.id)}
                             />
@@ -206,7 +212,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 fill="none"
                                 strokeDasharray={dashArray}
                                 strokeDashoffset={dashOffset}
-                                opacity={selectedId && selectedId !== e.id ? 0.3 : 1}
+                                opacity={selectedId && selectedId !== e.id ? 0.5 : 1}
                                 style={{ cursor: "pointer" }}
                                 onClick={() => setSelectedId(e.id)}
                             />
@@ -315,10 +321,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                             <div className={styles.eventActions}>
                                 <button
                                     className={styles.actionButton}
-                                    onClick={() => {
-                                        // TODO: Implement update functionality
-                                        console.log("Update event", selectedEvent);
-                                    }}
+                                    onClick={() => setIsUpdateModalOpen(true)}
                                     aria-label="Update event"
                                 >
                                     <svg
@@ -339,14 +342,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 </button>
                                 <button
                                     className={styles.actionButton}
-                                    onClick={() => {
-                                        if (
-                                            confirm("Are you sure you want to delete this event?")
-                                        ) {
-                                            deleteMutation.mutate(selectedEvent);
-                                            setSelectedId(null);
-                                        }
-                                    }}
+                                    onClick={() => setIsDeleteModalOpen(true)}
                                     aria-label="Delete event"
                                 >
                                     <svg
@@ -374,6 +370,26 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                     )}
                 </div>
             </div>
+
+            {/* Modals */}
+            {selectedEvent && (
+                <>
+                    <UpdateEventModal
+                        event={selectedEvent}
+                        isOpen={isUpdateModalOpen}
+                        onClose={() => setIsUpdateModalOpen(false)}
+                    />
+                    <DeleteEventModal
+                        event={selectedEvent}
+                        isOpen={isDeleteModalOpen}
+                        onClose={() => setIsDeleteModalOpen(false)}
+                        onDeleted={() => {
+                            setSelectedId(null);
+                            setIsDeleteModalOpen(false);
+                        }}
+                    />
+                </>
+            )}
         </div>
     );
 };
