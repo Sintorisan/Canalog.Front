@@ -1,4 +1,4 @@
-import { ThemeListItem } from "../../services/apiService";
+import { type ThemeListItem } from "../../services/apiService";
 import styles from "./ThemeSelector.module.css";
 
 interface ThemeSelectorProps {

@@ -1,4 +1,4 @@
-import { useQuery, UseQueryOptions } from "@tanstack/react-query";
+import { useQuery, type UseQueryOptions } from "@tanstack/react-query";
 import { useAuthenticatedUser } from "./useAuthenticatedUser";
 import { getDayEvents } from "../services/eventService";
 import { formatIsoDate } from "../utils/dateUtils";
