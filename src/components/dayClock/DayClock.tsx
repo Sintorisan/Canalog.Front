@@ -11,8 +11,8 @@ import {
     getMinuteHandPos,
 } from "../../utils/clockMathUtils";
 import { formatTime } from "../../utils/dateUtils";
-import { UpdateEventModal } from "./UpdateEventModal";
-import { DeleteEventModal } from "./DeleteEventModal";
+import { UpdateEventModal } from "../event/UpdateEventModal";
+import { DeleteEventModal } from "../event/DeleteEventModal";
 
 export const DayClock = ({ day }: { day: DayEvents }) => {
     const [selectedId, setSelectedId] = useState<string | null>(null);

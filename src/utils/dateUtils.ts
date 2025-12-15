@@ -42,3 +42,16 @@ export const formatTime = (date: Date): string => {
     const minutes = date.getMinutes();
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}`;
 };
+
+export const parseUtcToLocal = (iso: string): Date => {
+    const d = new Date(iso); // interpreted in local timezone
+    return new Date(
+        d.getFullYear(),
+        d.getMonth(),
+        d.getDate(),
+        d.getHours(),
+        d.getMinutes(),
+        d.getSeconds(),
+        d.getMilliseconds()
+    );
+};

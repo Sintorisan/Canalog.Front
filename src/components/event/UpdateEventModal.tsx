@@ -1,9 +1,16 @@
-import { useState, useEffect, FormEvent } from "react";
-import { useCreateEventMutation } from "../../hooks/useCreateEventMutation";
+import { useState, useEffect, type FormEvent } from "react";
+import { useUpdateEventMutation } from "../../hooks/useUpdateEventMutation";
 import { useTheme } from "../../context/ThemeContext";
-import type { EventColor } from "../../types/EventTypes";
-import styles from "./CreateEventModal.module.css";
+import type { CalendarEvent, EventColor } from "../../types/EventTypes";
+import styles from "./UpdateEventModal.module.css";
 
+interface UpdateEventModalProps {
+    event: CalendarEvent;
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+// Format for datetime-local input
 const formatDateTimeLocal = (date: Date): string => {
     const y = date.getFullYear();
     const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -13,6 +20,7 @@ const formatDateTimeLocal = (date: Date): string => {
     return `${y}-${m}-${d}T${h}:${mm}`;
 };
 
+// Parse datetime-local input WITHOUT timezone drift
 const parseLocalDateTime = (value: string): Date => {
     const [datePart, timePart] = value.split("T");
     const [y, m, d] = datePart.split("-").map(Number);
@@ -20,40 +28,27 @@ const parseLocalDateTime = (value: string): Date => {
     return new Date(y, m - 1, d, hh, mm, 0, 0);
 };
 
-export const CreateEventModal = ({ isOpen, onClose }) => {
+export const UpdateEventModal = ({ event, isOpen, onClose }: UpdateEventModalProps) => {
     const theme = useTheme();
-    const createMutation = useCreateEventMutation();
-
-    const defaultStart = () => {
-        const now = new Date();
-        now.setMinutes(0, 0, 0);
-        return now;
-    };
-
-    const defaultEnd = (start: Date) => {
-        const end = new Date(start);
-        end.setHours(end.getHours() + 1);
-        return end;
-    };
+    const updateMutation = useUpdateEventMutation();
 
     const [title, setTitle] = useState("");
     const [startDateTime, setStartDateTime] = useState("");
     const [endDateTime, setEndDateTime] = useState("");
-    const [selectedColor, setSelectedColor] = useState<EventColor>(0);
+    const [selectedColor, setSelectedColor] = useState<EventColor>(event.color);
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
         if (isOpen) {
-            const s = defaultStart();
-            const e = defaultEnd(s);
-            setTitle("");
-            setStartDateTime(formatDateTimeLocal(s));
-            setEndDateTime(formatDateTimeLocal(e));
-            setSelectedColor(0);
+            setTitle(event.title);
+            setStartDateTime(formatDateTimeLocal(event.start));
+            setEndDateTime(formatDateTimeLocal(event.end));
+            setSelectedColor(event.color);
             setError(null);
         }
-    }, [isOpen]);
+    }, [isOpen, event]);
 
+    // Auto-fix end time when start changes
     useEffect(() => {
         if (!isOpen) return;
 
@@ -69,34 +64,39 @@ export const CreateEventModal = ({ isOpen, onClose }) => {
 
     const handleSubmit = async (e: FormEvent) => {
         e.preventDefault();
+        setError(null);
 
         const start = parseLocalDateTime(startDateTime);
         const end = parseLocalDateTime(endDateTime);
 
-        if (!title.trim()) return setError("Title required");
-        if (end <= start) return setError("End must be after start");
+        if (end <= start) {
+            setError("End time must be after start time");
+            return;
+        }
 
         try {
-            await createMutation.mutateAsync({
+            await updateMutation.mutateAsync({
+                ...event,
                 title: title.trim(),
                 start,
                 end,
                 color: selectedColor,
             });
+
             onClose();
         } catch {
-            setError("Failed to create event.");
+            setError("Failed to update event. Please try again.");
         }
     };
 
     if (!isOpen) return null;
 
     const colorOptions = [
-        { value: 0, color: theme.colorScheme.red },
-        { value: 1, color: theme.colorScheme.blue },
-        { value: 2, color: theme.colorScheme.green },
-        { value: 3, color: theme.colorScheme.yellow },
-        { value: 4, color: theme.colorScheme.purple },
+        { value: 0, label: "Red", color: theme.colorScheme.red },
+        { value: 1, label: "Blue", color: theme.colorScheme.blue },
+        { value: 2, label: "Green", color: theme.colorScheme.green },
+        { value: 3, label: "Yellow", color: theme.colorScheme.yellow },
+        { value: 4, label: "Purple", color: theme.colorScheme.purple },
     ];
 
     return (
@@ -110,7 +110,7 @@ export const CreateEventModal = ({ isOpen, onClose }) => {
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className={styles.modalHeader}>
-                    <h2 className={styles.modalTitle}>Create Event</h2>
+                    <h2 className={styles.modalTitle}>Update Event</h2>
                     <button className={styles.closeButton} onClick={onClose}>
                         ×
                     </button>
@@ -131,9 +131,9 @@ export const CreateEventModal = ({ isOpen, onClose }) => {
                             <label className={styles.label}>Start</label>
                             <input
                                 type="datetime-local"
-                                className={styles.input}
                                 value={startDateTime}
                                 onChange={(e) => setStartDateTime(e.target.value)}
+                                className={styles.input}
                             />
                         </div>
 
@@ -141,9 +141,9 @@ export const CreateEventModal = ({ isOpen, onClose }) => {
                             <label className={styles.label}>End</label>
                             <input
                                 type="datetime-local"
-                                className={styles.input}
                                 value={endDateTime}
                                 onChange={(e) => setEndDateTime(e.target.value)}
+                                className={styles.input}
                             />
                         </div>
                     </div>
@@ -172,7 +172,7 @@ export const CreateEventModal = ({ isOpen, onClose }) => {
                             Cancel
                         </button>
                         <button type="submit" className={styles.submitButton}>
-                            Create Event
+                            Update Event
                         </button>
                     </div>
                 </form>
