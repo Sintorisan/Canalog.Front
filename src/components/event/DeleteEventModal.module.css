@@ -4,15 +4,16 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    -webkit-backdrop-filter: blur(4px);
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
     z-index: 1000;
-    padding: 1rem;
+    padding: 2rem 1rem;
     animation: fadeIn 0.2s ease;
+    overflow-y: auto;
 }
 
 @keyframes fadeIn {
@@ -25,24 +26,25 @@
 }
 
 .modal {
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
-    border: 1px solid rgba(255, 255, 255, 0.35);
-    border-radius: 1.25rem;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 1.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     width: 100%;
-    max-width: 420px;
-    animation: slideUp 0.3s ease;
+    max-width: 480px;
+    margin-top: 2rem;
+    animation: slideDown 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@keyframes slideUp {
+@keyframes slideDown {
     from {
-        transform: translateY(20px);
+        transform: translateY(-24px) scale(0.96);
         opacity: 0;
     }
     to {
-        transform: translateY(0);
+        transform: translateY(0) scale(1);
         opacity: 1;
     }
 }
@@ -51,8 +53,26 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1.5rem 1.5rem 1rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.75rem 2rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.headerContent {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.iconWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 0.75rem;
+    background: rgba(239, 68, 68, 0.15);
+    color: #fee2e2;
 }
 
 .modalTitle {
@@ -60,6 +80,7 @@
     font-weight: 600;
     margin: 0;
     color: inherit;
+    letter-spacing: -0.01em;
 }
 
 .closeButton {
@@ -69,22 +90,24 @@
     width: 36px;
     height: 36px;
     padding: 0;
-    background: rgba(255, 255, 255, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 0.625rem;
     cursor: pointer;
     color: inherit;
-    transition: all 0.25s ease;
+    transition: all 0.2s ease;
+    opacity: 0.8;
 }
 
 .closeButton:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
-    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.2);
+    border-color: rgba(255, 255, 255, 0.3);
+    opacity: 1;
+    transform: scale(1.05);
 }
 
 .closeButton:active:not(:disabled) {
-    transform: translateY(0);
+    transform: scale(0.95);
 }
 
 .closeButton:disabled {
@@ -93,10 +116,10 @@
 }
 
 .modalContent {
-    padding: 1.5rem;
+    padding: 2rem;
     display: flex;
     flex-direction: column;
-    gap: 1.25rem;
+    gap: 1.5rem;
 }
 
 .confirmationText {
@@ -104,93 +127,112 @@
     color: inherit;
     margin: 0;
     opacity: 0.9;
-    line-height: 1.5;
+    line-height: 1.6;
+    font-weight: 400;
 }
 
 .eventDetails {
-    background: rgba(255, 255, 255, 0.15);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 0.75rem;
-    padding: 1rem;
+    background: rgba(255, 255, 255, 0.08);
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    border-radius: 1rem;
+    padding: 1.25rem;
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 1rem;
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 
 .eventDetailRow {
     display: flex;
-    gap: 0.75rem;
+    gap: 1rem;
     align-items: flex-start;
 }
 
 .eventDetailLabel {
     font-size: 0.875rem;
-    font-weight: 500;
+    font-weight: 600;
     color: inherit;
-    opacity: 0.8;
-    min-width: 60px;
+    opacity: 0.75;
+    min-width: 70px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-size: 0.75rem;
 }
 
 .eventDetailValue {
-    font-size: 0.875rem;
+    font-size: 0.9375rem;
     color: inherit;
     flex: 1;
+    font-weight: 500;
 }
 
 .error {
-    padding: 0.75rem 1rem;
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.4);
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.875rem 1.125rem;
+    background: rgba(239, 68, 68, 0.15);
+    border: 1.5px solid rgba(239, 68, 68, 0.3);
     border-radius: 0.75rem;
     color: #fee2e2;
     font-size: 0.875rem;
-    text-align: center;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.error svg {
+    flex-shrink: 0;
 }
 
 .modalActions {
     display: flex;
     gap: 0.75rem;
     justify-content: flex-end;
-    padding: 1rem 1.5rem 1.5rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1.5rem 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(255, 255, 255, 0.03);
 }
 
 .cancelButton,
 .deleteButton {
-    padding: 0.75rem 1.5rem;
+    padding: 0.875rem 1.75rem;
     border-radius: 0.75rem;
     font-size: 0.9375rem;
     font-weight: 500;
     cursor: pointer;
-    transition: all 0.25s ease;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+    transition: all 0.2s ease;
+    border: 1.5px solid rgba(255, 255, 255, 0.3);
     font-family: inherit;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.01em;
 }
 
 .cancelButton {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.1);
     color: inherit;
 }
 
 .cancelButton:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.25);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.4);
     transform: translateY(-1px);
 }
 
 .deleteButton {
-    background: rgba(239, 68, 68, 0.3);
+    background: rgba(239, 68, 68, 0.25);
     color: #fee2e2;
-    border-color: rgba(239, 68, 68, 0.5);
+    border-color: rgba(239, 68, 68, 0.4);
+    font-weight: 600;
 }
 
 .deleteButton:hover:not(:disabled) {
-    background: rgba(239, 68, 68, 0.4);
-    border-color: rgba(239, 68, 68, 0.6);
+    background: rgba(239, 68, 68, 0.35);
+    border-color: rgba(239, 68, 68, 0.5);
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+    box-shadow: 0 4px 16px rgba(239, 68, 68, 0.25);
 }
 
 .cancelButton:active:not(:disabled),
@@ -200,6 +242,53 @@
 
 .cancelButton:disabled,
 .deleteButton:disabled {
-    opacity: 0.5;
+    opacity: 0.6;
     cursor: not-allowed;
+    transform: none;
+}
+
+.spinner {
+    animation: spin 0.8s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+@media (max-width: 640px) {
+    .modalOverlay {
+        padding: 1rem;
+        align-items: flex-start;
+    }
+
+    .modal {
+        max-width: 100%;
+        margin-top: 0;
+        border-radius: 1.25rem;
+    }
+
+    .modalHeader {
+        padding: 1.5rem 1.5rem;
+    }
+
+    .modalContent {
+        padding: 1.5rem;
+        gap: 1.25rem;
+    }
+
+    .modalActions {
+        flex-direction: column-reverse;
+        padding: 1.5rem;
+    }
+
+    .cancelButton,
+    .deleteButton {
+        width: 100%;
+        justify-content: center;
+    }
 }
