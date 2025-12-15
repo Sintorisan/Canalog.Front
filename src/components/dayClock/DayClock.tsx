@@ -82,7 +82,8 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                     style={{
                         width: `${overlayDiameter}px`,
                         height: `${overlayDiameter}px`,
-                        background: `rgba(255,255,255,0.06)`,
+                        background:
+                            "color-mix(in srgb, var(--ui-glass-highlight) 35%, transparent)",
                     }}
                 />
                 <svg width={size} height={size} style={{ position: "relative", zIndex: 3 }}>
@@ -91,7 +92,11 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                         =========================== */}
                     <defs>
                         <filter id="frostBlur" x="-50%" y="-50%" width="200%" height="200%">
-                            <feFlood floodColor="#ffffff" floodOpacity="0.24" result="flood" />
+                            <feFlood
+                                floodColor={theme.uiColorScheme.glassHighlight}
+                                floodOpacity="0.24"
+                                result="flood"
+                            />
                             <feBlend in="SourceGraphic" in2="flood" mode="normal" result="base" />
                             <feGaussianBlur in="base" stdDeviation="12" result="blur" />
                             <feComposite in="blur" in2="SourceAlpha" operator="in" result="glass" />

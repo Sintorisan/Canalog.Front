@@ -12,7 +12,7 @@
     scroll-behavior: smooth;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: thin;
-    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+    scrollbar-color: var(--ui-glass-shadow) transparent;
 }
 
 .scrollContainer::-webkit-scrollbar {
@@ -24,12 +24,12 @@
 }
 
 .scrollContainer::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.3);
+    background: var(--ui-glass-shadow);
     border-radius: 4px;
 }
 
 .scrollContainer::-webkit-scrollbar-thumb:hover {
-    background: rgba(255, 255, 255, 0.5);
+    background: color-mix(in srgb, var(--ui-glass-shadow) 70%, transparent);
 }
 
 .themeCard {
@@ -41,22 +41,23 @@
     overflow: hidden;
     cursor: pointer;
     transition: all 0.2s ease;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid var(--ui-glass-shadow);
+    background: color-mix(in srgb, var(--ui-glass-highlight) 70%, transparent);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
 }
 
 .themeCard:hover:not(.disabled) {
     transform: translateY(-4px);
-    border-color: rgba(255, 255, 255, 0.4);
+    border-color: var(--ui-glass-shadow);
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
 }
 
 .themeCard.selected {
-    border-color: rgba(255, 255, 255, 0.8);
+    border-color: var(--ui-accent);
     border-width: 3px;
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.3), 0 8px 24px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--ui-accent) 60%, transparent),
+        0 8px 24px rgba(0, 0, 0, 0.3);
 }
 
 .themeCard.disabled {
@@ -97,7 +98,7 @@
 .themeName {
     font-size: 0.875rem;
     font-weight: 600;
-    color: rgba(255, 255, 255, 0.95);
+    color: var(--ui-text-primary);
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
     line-height: 1.2;
 }
@@ -109,11 +110,11 @@
     width: 28px;
     height: 28px;
     border-radius: 50%;
-    background: rgba(255, 255, 255, 0.95);
+    background: var(--ui-bg);
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #1a1a1a;
+    color: var(--ui-text-primary);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 }
 

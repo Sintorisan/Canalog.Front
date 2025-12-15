@@ -26,10 +26,10 @@
 }
 
 .modal {
-    background: rgba(255, 255, 255, 0.15);
+    background: var(--ui-glass-highlight);
     backdrop-filter: blur(24px);
     -webkit-backdrop-filter: blur(24px);
-    border: 1px solid rgba(255, 255, 255, 0.25);
+    border: 1px solid var(--ui-glass-shadow);
     border-radius: 1.5rem;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1) inset;
     width: 100%;
@@ -58,8 +58,8 @@
     align-items: center;
     justify-content: space-between;
     padding: 1.75rem 2rem;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
-    background: rgba(255, 255, 255, 0.05);
+    border-bottom: 1px solid var(--ui-glass-shadow);
+    background: color-mix(in srgb, var(--ui-glass-highlight) 60%, transparent);
 }
 
 .headerContent {
@@ -148,8 +148,8 @@
     flex-direction: column;
     gap: 0.75rem;
     padding: 1.25rem;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, var(--ui-glass-highlight) 70%, transparent);
+    border: 1px solid var(--ui-glass-shadow);
     border-radius: 1rem;
 }
 
@@ -186,8 +186,8 @@
 
 .input {
     padding: 0.875rem 1.125rem;
-    background: rgba(255, 255, 255, 0.12);
-    border: 1.5px solid rgba(255, 255, 255, 0.2);
+    background: color-mix(in srgb, var(--ui-glass-highlight) 80%, transparent);
+    border: 1.5px solid var(--ui-glass-shadow);
     border-radius: 0.75rem;
     color: inherit;
     font-size: 0.9375rem;
@@ -235,7 +235,7 @@
     transition: all 0.2s ease;
     padding: 0;
     position: relative;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
 }
 
 .colorOption:hover {
@@ -244,8 +244,9 @@
 }
 
 .colorOptionActive {
-    border-color: rgba(255, 255, 255, 0.6);
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.2), 0 4px 16px rgba(0, 0, 0, 0.25);
+    border-color: var(--ui-accent);
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--ui-accent) 60%, transparent),
+        0 4px 16px rgba(0, 0, 0, 0.25);
     transform: scale(1.05);
 }
 
@@ -273,7 +274,7 @@
     justify-content: flex-end;
     margin-top: 0.5rem;
     padding-top: 1rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid var(--ui-glass-shadow);
 }
 
 .cancelButton,
@@ -293,7 +294,7 @@
 }
 
 .cancelButton {
-    background: rgba(255, 255, 255, 0.1);
+    background: color-mix(in srgb, var(--ui-glass-highlight) 60%, transparent);
     color: inherit;
 }
 
@@ -304,14 +305,14 @@
 }
 
 .submitButton {
-    background: rgba(255, 255, 255, 0.2);
+    background: var(--ui-accent);
     color: inherit;
     font-weight: 600;
 }
 
 .submitButton:hover:not(:disabled) {
-    background: rgba(255, 255, 255, 0.3);
-    border-color: rgba(255, 255, 255, 0.5);
+    background: color-mix(in srgb, var(--ui-accent) 85%, var(--ui-text-primary) 15%);
+    border-color: var(--ui-accent);
     transform: translateY(-1px);
     box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }

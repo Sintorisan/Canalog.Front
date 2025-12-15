@@ -4,6 +4,7 @@ import { Auth0ProviderWithConfig } from "./router/providers/Auth0ProviderWithCon
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeContext, defaultTheme } from "../context/ThemeContext";
 import { useUserOptionsQuery } from "../hooks/useUserOptionsQuery";
+import { ThemeCssVars } from "../components/layout/ThemeCssVars";
 
 const queryClient = new QueryClient();
 
@@ -22,6 +23,7 @@ function ThemedRouter() {
 
     return (
         <ThemeContext.Provider value={userOptions?.theme ?? defaultTheme}>
+            <ThemeCssVars />
             <RouterProvider router={router} />
         </ThemeContext.Provider>
     );
