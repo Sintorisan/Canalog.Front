@@ -1,4 +1,4 @@
-import { useMemo, useState, useEffect } from "react";
+import { useMemo, useState, useEffect, useRef } from "react";
 import styles from "./DayClock.module.css";
 import type { DayEvents, CalendarEvent } from "../../types/EventTypes";
 import { useTheme } from "../../context/ThemeContext";
@@ -14,20 +14,43 @@ import { formatTime } from "../../utils/dateUtils";
 import { UpdateEventModal } from "../event/UpdateEventModal";
 import { DeleteEventModal } from "../event/DeleteEventModal";
 
+const BASE_SIZE = 360;
+const BASE_OUTER_EVENT_RADIUS = 120;
+const BASE_INNER_RADIUS = 95;
+const BASE_HOLE_RADIUS = 80;
+
 export const DayClock = ({ day }: { day: DayEvents }) => {
     const [selectedId, setSelectedId] = useState<string | null>(null);
     const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
     const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
     const [now, setNow] = useState(() => new Date());
+    const dialRef = useRef<HTMLDivElement | null>(null);
 
-    const size = 360;
+    // Track the actual rendered size so the clock scales cleanly on different viewports
+    const [measuredSize, setMeasuredSize] = useState<number | null>(null);
+
+    useEffect(() => {
+        const updateSize = () => {
+            if (!dialRef.current) return;
+            const rect = dialRef.current.getBoundingClientRect();
+            const s = Math.min(rect.width, rect.height || rect.width);
+            // Cap a bit larger on bigger screens, but always fit within viewport
+            setMeasuredSize(Math.min(s, 520));
+        };
+
+        updateSize();
+        window.addEventListener("resize", updateSize);
+        return () => window.removeEventListener("resize", updateSize);
+    }, []);
+
+    const size = measuredSize ?? BASE_SIZE;
     const center = size / 2;
 
-    // NEW RADII (your new geometry)
-    const outerEventRadius = 120; // events 12–23
-    const outerNumberRadius = 120; // numbers 12–23
-    const innerNumberRadius = 95; // numbers 00–11
-    const innerEventRadius = 95; // events 00–11
+    // Radii scaled from the base design so arcs stay aligned with the frosted donut
+    const outerEventRadius = (BASE_OUTER_EVENT_RADIUS / BASE_SIZE) * size; // events 12–23
+    const outerNumberRadius = (BASE_OUTER_EVENT_RADIUS / BASE_SIZE) * size; // numbers 12–23
+    const innerNumberRadius = (BASE_INNER_RADIUS / BASE_SIZE) * size; // numbers 00–11
+    const innerEventRadius = (BASE_INNER_RADIUS / BASE_SIZE) * size; // events 00–11
 
     // Update clock every second for smooth animation
     useEffect(() => {
@@ -57,17 +80,16 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
         [now, center, outerEventRadius]
     );
 
-    // We'll rely on the shared getDashProps from clockMathUtils
-
     const selectedEvent = day.events.find((e) => e.id === selectedId);
 
-    const outerDiameter = (outerNumberRadius + 20) * 2;
-    const overlayDiameter = (outerNumberRadius + 14) * 2;
-    const holeRadius = 80; // keep existing mask hole size from SVG
+    // Donut sizes scaled with the clock so arcs always sit neatly inside
+    const outerDiameter = (outerNumberRadius + (20 / BASE_SIZE) * size) * 2;
+    const overlayDiameter = (outerNumberRadius + (14 / BASE_SIZE) * size) * 2;
+    const holeRadius = (BASE_HOLE_RADIUS / BASE_SIZE) * size;
 
     return (
         <div>
-            <div className={styles.glassDial}>
+            <div className={styles.glassDial} ref={dialRef}>
                 <div
                     className={styles.donut}
                     style={{
@@ -86,7 +108,12 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                             "color-mix(in srgb, var(--ui-glass-highlight) 35%, transparent)",
                     }}
                 />
-                <svg width={size} height={size} style={{ position: "relative", zIndex: 3 }}>
+                <svg
+                    width={size}
+                    height={size}
+                    viewBox={`0 0 ${size} ${size}`}
+                    style={{ position: "relative", zIndex: 3 }}
+                >
                     {/* ===========================
                             DEFINITIONS
                         =========================== */}
@@ -139,7 +166,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
 
                         <mask id="glassMask">
                             <rect width="100%" height="100%" fill="white" />
-                            <circle cx="50%" cy="50%" r="80" fill="black" />
+                            <circle cx="50%" cy="50%" r={holeRadius} fill="black" />
                         </mask>
                     </defs>
 
@@ -148,14 +175,12 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                         =========================== */}
                     {/* Outer events (12–23) */}
                     {day.events.map((e) => {
-                        // construct clamped outer segment for this day
                         const startMinutes = minutesFromMidnight(e.start);
                         const endMinutes = minutesFromMidnight(e.end);
                         const segStart = Math.max(startMinutes, HALF_MINUTES);
                         const segEnd = Math.min(endMinutes, HALF_MINUTES * 2);
                         if (segEnd <= segStart) return null;
 
-                        // create a Date-based segment event clamped to the same day
                         const dayStart = new Date(day.date);
                         dayStart.setHours(0, 0, 0, 0);
                         const start = minutesToDate(dayStart, segStart);
@@ -179,7 +204,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 fill="none"
                                 strokeDasharray={dashArray}
                                 strokeDashoffset={dashOffset}
-                                opacity={selectedId && selectedId !== e.id ? 0.5 : 1}
+                                opacity={selectedId && selectedId !== e.id ? 0.5 : 0.8}
                                 style={{ cursor: "pointer" }}
                                 onClick={() => setSelectedId(e.id)}
                             />
@@ -217,7 +242,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 fill="none"
                                 strokeDasharray={dashArray}
                                 strokeDashoffset={dashOffset}
-                                opacity={selectedId && selectedId !== e.id ? 0.5 : 1}
+                                opacity={selectedId && selectedId !== e.id ? 0.5 : 0.8}
                                 style={{ cursor: "pointer" }}
                                 onClick={() => setSelectedId(e.id)}
                             />
@@ -239,7 +264,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 x={x}
                                 y={y}
                                 fill={theme.uiColorScheme.textPrimary}
-                                fontSize="11"
+                                fontSize={11 * (size / BASE_SIZE)}
                                 fontWeight="600"
                                 textAnchor="middle"
                                 dominantBaseline="middle"
@@ -261,7 +286,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                 x={x}
                                 y={y}
                                 fill={theme.uiColorScheme.textPrimary}
-                                fontSize="11"
+                                fontSize={11 * (size / BASE_SIZE)}
                                 fontWeight="500"
                                 textAnchor="middle"
                                 dominantBaseline="middle"
@@ -282,7 +307,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                             x2={hourHand.x}
                             y2={hourHand.y}
                             stroke={theme.uiColorScheme.clockHandPrimary}
-                            strokeWidth={5}
+                            strokeWidth={5 * (size / BASE_SIZE)}
                             strokeLinecap="round"
                         />
                         <line
@@ -291,7 +316,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                             x2={minuteHand.x}
                             y2={minuteHand.y}
                             stroke={theme.uiColorScheme.clockHandSecondary}
-                            strokeWidth={3}
+                            strokeWidth={3 * (size / BASE_SIZE)}
                             strokeLinecap="round"
                         />
                     </g>
@@ -300,10 +325,10 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                     <circle
                         cx={center}
                         cy={center}
-                        r={7}
+                        r={7 * (size / BASE_SIZE)}
                         fill={theme.uiColorScheme.centerFill}
                         stroke={theme.uiColorScheme.centerStroke}
-                        strokeWidth={2}
+                        strokeWidth={2 * (size / BASE_SIZE)}
                     />
                 </svg>
 
@@ -329,6 +354,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                     onClick={() => setIsUpdateModalOpen(true)}
                                     aria-label="Update event"
                                 >
+                                    {/* pencil icon */}
                                     <svg
                                         width="16"
                                         height="16"
@@ -350,6 +376,7 @@ export const DayClock = ({ day }: { day: DayEvents }) => {
                                     onClick={() => setIsDeleteModalOpen(true)}
                                     aria-label="Delete event"
                                 >
+                                    {/* trash icon */}
                                     <svg
                                         width="16"
                                         height="16"

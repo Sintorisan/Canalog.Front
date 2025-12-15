@@ -14,18 +14,16 @@
 
 .glassDial {
     position: relative;
-    width: 360px;
-    height: 360px;
-    max-width: min(360px, 90vw);
-    max-height: min(360px, 90vw);
+    width: min(460px, 100vw - 2rem);
+    height: min(460px, 100vw - 2rem);
     display: inline-block;
     border-radius: 50%;
 }
 
 @media (max-width: 768px) {
     .glassDial {
-        width: min(360px, 85vw);
-        height: min(360px, 85vw);
+        width: min(460px, 100vw - 2rem);
+        height: min(460px, 100vw - 2rem);
     }
 
     .eventCard {
@@ -87,7 +85,7 @@
     }
     to {
         opacity: 1;
-        transform: translateX(-50%) translateY(0);
+        transform: translateX(0) translateY(0);
     }
 }
 
